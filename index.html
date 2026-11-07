@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diwali With Love 🪔</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;overflow-x:hidden;
+ background:radial-gradient(circle at top,#61400b,#171006 65%,#050301);
+ color:white;font-family:Arial,sans-serif;text-align:center;
+}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.page{position:relative;z-index:1;padding:25px 16px 45px}
+.diya{font-size:48px;animation:glow 1.5s infinite alternate}
+@keyframes glow{to{filter:drop-shadow(0 0 18px gold);transform:scale(1.08)}}
+h1{
+ color:#ffd66b;font-size:clamp(35px,9vw,58px);
+ text-shadow:0 0 15px #ff8c00,0 0 35px #ff4500;
+ margin:12px 0
+}
+.sub{color:#ffe6ae;font-size:17px}
+.card{
+ max-width:520px;margin:25px auto;padding:25px 19px;
+ border:1px solid #e9b957;border-radius:22px;
+ background:#ffffff12;backdrop-filter:blur(8px);
+ box-shadow:0 0 30px #e9a52b25;
+}
+.shayari{font-size:21px;line-height:1.9;color:#ffe9c2}
+.name{color:#ffcf57;font-size:27px;font-weight:bold}
+.emojis{font-size:30px;line-height:2.1}
+button{
+ border:0;border-radius:30px;padding:13px 23px;
+ background:linear-gradient(90deg,#ff9d00,#ffe17a);
+ color:#351400;font-size:16px;font-weight:bold;
+ margin:8px;cursor:pointer;
+}
+.small{font-size:13px;color:#d9c8ee;margin-top:20px}
+footer{color:#ffda92;margin-top:30px}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="page">
+ <div class="diya">🪔</div>
+ <h1>Diwali With Love</h1>
+ <p class="sub">✨ खुशियों और रोशनी का त्योहार ✨</p>
+
+ <div class="card">
+  <div class="emojis">🎆 🥳 😂 🪔 ❤️ 🎇</div>
+  <p class="name" id="person">आपके लिए खास संदेश</p>
+  <h2 style="color:#ffd66b">🌟 शुभ दीपावली 🌟</h2>
+  <div class="shayari">
+   रोशनी से हर अंधेरा दूर हो जाए,<br>
+   आपके जीवन में खुशियों का नूर छा जाए।<br>
+   हर सपना आपका पूरा हो जाए,<br>
+   यह दिवाली आपके लिए यादगार बन जाए। ❤️
+  </div>
+ </div>
+
+ <div class="card">
+  <h2 style="color:#ffd66b">😂 थोड़ा हँस भी लो!</h2>
+  <div class="shayari">
+   मिठाई खाना, खूब मुस्कुराना,<br>
+   लेकिन पड़ोसी की मिठाई मत चुराना! 😂<br>
+   पटाखे आसमान में खूब चमकाना,<br>
+   और दोस्तों को पार्टी देना मत भूल जाना! 😜
+  </div>
+  <div class="emojis">🤣 🥰 😎 🤩 🥳</div>
+ </div>
+
+ <div class="card">
+  <h2 style="color:#ffcf57">🎵 दिवाली म्यूजिक</h2>
+  <p>म्यूजिक शुरू करने के लिए नीचे दबाएँ।</p>
+  <button id="musicBtn" onclick="musicToggle()">▶ Music Play</button>
+  <button onclick="burst()">🎆 पटाखे चलाओ</button>
+ </div>
+
+ <h2 style="color:#ffdc83">💖 आपके लिए ढेर सारी शुभकामनाएँ 💖</h2>
+ <p class="sub">आपका घर खुशियों, प्रेम और समृद्धि से जगमगाता रहे।</p>
+ <div class="emojis">🪔 🎁 🍬 🌹 🎉 💝</div>
+ <footer>✨ Made with Love | Happy Diwali ✨</footer>
+ <p class="small">यह शुभकामना संदेश सिर्फ देखने और सुनने के लिए है।</p>
+</div>
+
+<script>
+// आसमान में रंगीन आतिशबाजी
+const canvas=document.getElementById("sky");
+const ctx=canvas.getContext("2d");
+let W,H,particles=[];
+function resize(){
+ W=canvas.width=innerWidth;
+ H=canvas.height=innerHeight;
+}
+resize();addEventListener("resize",resize);
+
+function burst(x=Math.random()*W,y=Math.random()*H*.65){
+ let colors=["#ffdc45","#ff4e91","#55eaff","#a879ff","#ff8533"];
+ let color=colors[Math.floor(Math.random()*colors.length)];
+ for(let i=0;i<65;i++){
+  let a=Math.PI*2*i/65;
+  let speed=1+Math.random()*4;
+  particles.push({
+   x,y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,
+   life:65+Math.random()*30,color
+  });
+ }
+}
+function animate(){
+ ctx.clearRect(0,0,W,H);
+ if(Math.random()<.035)burst();
+ particles=particles.filter(p=>p.life>0);
+ particles.forEach(p=>{
+  p.x+=p.vx;p.y+=p.vy;p.vy+=.025;
+  p.vx*=.985;p.life--;
+  ctx.globalAlpha=Math.min(1,p.life/30);
+  ctx.fillStyle=p.color;
+  ctx.shadowBlur=12;ctx.shadowColor=p.color;
+  ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fill();
+ });
+ ctx.globalAlpha=1;ctx.shadowBlur=0;
+ requestAnimationFrame(animate);
+}
+animate();
+
+// बिना बाहरी ऑडियो फाइल के हल्का संगीत
+let audio=null,playing=false,timer=null,note=0;
+const melody=[523,659,784,659,587,698,880,698,523,659,784,1046,880,784,659,587];
+function musicToggle(){
+ if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();
+ if(audio.state==="suspended")audio.resume();
+ if(playing){
+  clearInterval(timer);playing=false;
+  document.getElementById("musicBtn").textContent="▶ Music Play";
+  return;
+ }
+ playing=true;
+ document.getElementById("musicBtn").textContent="⏸ Music Pause";
+ function playNote(){
+  if(!playing)return;
+  let osc=audio.createOscillator();
+  let gain=audio.createGain();
+  osc.type="sine";
+  osc.frequency.value=melody[note++%melody.length];
+  gain.gain.setValueAtTime(.0001,audio.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.07,audio.currentTime+.04);
+  gain.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+.38);
+  osc.connect(gain);gain.connect(audio.destination);
+  osc.start();osc.stop(audio.currentTime+.4);
+ }
+ playNote();timer=setInterval(playNote,430);
+}
+</script>
+</body>
+</html>
